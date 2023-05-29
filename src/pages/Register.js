@@ -23,6 +23,10 @@ function Register(props) {
             setLoading(false)
             navigate('/login')
         })
+            .catch((err)=>{
+                message.error("Something went wrong")
+                setLoading(false)
+            })
         console.log('Success:', values);
     };
 
