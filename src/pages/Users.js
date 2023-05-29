@@ -33,22 +33,25 @@ function Users(props) {
     };
 
     const [actionLoading, setActionLoading] = useState(false)
-
+    const [tableLoading, setTableLoading] = useState(true)
     const changeStatus = (status) =>{
         setActionLoading(true)
         console.log(selectedRows)
         Promise.all(selectedRows.map(item=>{
             return updateUserStatus(item.id, status)
         })).then(res=>{
-            message.success("Users status updated successfully")
             if(status === "blocked"){
                 if(selectedRows.find(item=>item.id === userMe.id)){
+                    message.success("Users status updated successfully")
                     message.warning("You blocked yourself")
                     logout()
+                    setSelectedRows([])
+                    return;
                 }
             }
             setSelectedRows([])
             getUsers()
+            message.success("Users status updated successfully")
         })
             .catch(()=>{
                 setActionLoading(false)
@@ -57,6 +60,7 @@ function Users(props) {
     }
 
     const getUsers = () =>{
+        setTableLoading(true)
         getUsersApi().then(res=>{
             let usersData = []
             res.data.forEach(item=>{
@@ -67,10 +71,12 @@ function Users(props) {
             })
             setUsers(usersData)
             setActionLoading(false)
+            setTableLoading(false)
         })
             .catch(err=>{
                 message.error("Something went wrong or network error")
                 console.log(err)
+                setTableLoading(false)
                 setActionLoading(false)
             })
     }
@@ -85,13 +91,17 @@ function Users(props) {
         Promise.all(selectedRows.map(item=>{
             return deleteUserApi(item.id)
         })).then(res=>{
-            message.success("Users deleted successfully")
             if(selectedRows.find(item=>item.id === userMe.id)){
+                message.success("Users deleted successfully")
                 message.warning("You deleted yourself")
                 logout()
+                setSelectedRows([])
+                return ;
+
             }
-            getUsers()
             setSelectedRows([])
+            getUsers()
+            message.success("Users deleted successfully")
         })
             .catch(()=>{
                 setActionLoading(false)
@@ -157,6 +167,7 @@ function Users(props) {
                         <Button disabled={selectedRows < 1} loading={actionLoading} onClick={()=>deleteUser()} size={"large"} danger className="d-flex align-items-center"><DeleteOutlined /></Button>
                     </div>
                     <Table
+                        loading={tableLoading}
                         rowSelection={{
                             type: "checkbox",
                             ...rowSelection,
