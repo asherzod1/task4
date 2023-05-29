@@ -12,35 +12,6 @@ const timeConverter = (time) =>{
     return `${t.split(".")[0]}, ${date}`
 }
 
-const columns = [
-    {
-        title: 'ID',
-        dataIndex: 'id'
-    },
-    {
-        title: 'Name',
-        dataIndex: 'name',
-    },
-    {
-        title: 'Email',
-        dataIndex: 'email',
-    },
-    {
-        title: "Last login",
-        dataIndex: "last_login_time",
-        render: (time)=> timeConverter(time)
-    },
-    {
-        title: "Registration time",
-        dataIndex: "registration_time",
-        render: (time)=> timeConverter(time)
-    },
-    {
-        title: "Status",
-        dataIndex: "status",
-        render: (status) => status === "active" ? <span style={{color:"#00A000"}}>{status.toUpperCase()}</span> : <span style={{color:"#FF4F4D"}}>{status.toUpperCase()}</span>
-    }
-];
 
 
 function Users(props) {
@@ -137,6 +108,38 @@ function Users(props) {
         })
         getUsers()
     },[])
+
+    const columns = [
+        {
+            title: 'ID',
+            dataIndex: 'id'
+        },
+        {
+            title: 'Name',
+            dataIndex: 'name',
+            render: (name, record) => record.id === userMe.id ? <span style={{color:"#00A000"}}>{name}</span> : <span>{name}</span>
+        },
+        {
+            title: 'Email',
+            dataIndex: 'email',
+        },
+        {
+            title: "Last login",
+            dataIndex: "last_login_time",
+            render: (time)=> timeConverter(time)
+        },
+        {
+            title: "Registration time",
+            dataIndex: "registration_time",
+            render: (time)=> timeConverter(time)
+        },
+        {
+            title: "Status",
+            dataIndex: "status",
+            render: (status) => status === "active" ? <span style={{color:"#00A000"}}>{status.toUpperCase()}</span> : <span style={{color:"#FF4F4D"}}>{status.toUpperCase()}</span>
+        }
+    ];
+
     return (
         <div>
             <div className="d-flex justify-content-between align-items-end px-5">
