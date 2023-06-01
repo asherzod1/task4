@@ -20,15 +20,20 @@ function Users(props) {
     const [selectedRows, setSelectedRows] = useState([])
 
     const rowSelection = {
-        onChange: (selectedRowKeys, selectedRows, info) => {
+        onChange: (selectedRowKeys, selectedRowsInput, info) => {
             console.log("INFO", info)
+            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRowsInput);
+
+            if(info.type === "all" && users.length === selectedRows.length){
+                setSelectedRows([])
+                return;
+            }
             if(info.type === "all"){
                 setSelectedRows(users)
                 return;
             }
-            setSelectedRows(selectedRows)
-            console.log(selectedRows, userMe)
-            console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
+            setSelectedRows(selectedRowsInput)
+            console.log(selectedRowsInput, userMe)
         },
     };
 
