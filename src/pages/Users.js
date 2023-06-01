@@ -20,16 +20,16 @@ function Users(props) {
     const [selectedRows, setSelectedRows] = useState([])
 
     const rowSelection = {
-        onChange: (selectedRowKeys, selectedRows) => {
+        onChange: (selectedRowKeys, selectedRows, info) => {
+            console.log("INFO", info)
+            if(info.type === "all"){
+                setSelectedRows(users)
+                return;
+            }
             setSelectedRows(selectedRows)
             console.log(selectedRows, userMe)
             console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
         },
-        getCheckboxProps: (record) => ({
-            disabled: record.name === 'Disabled User',
-            // Column configuration not to be checked
-            name: record.name,
-        }),
     };
 
     const [actionLoading, setActionLoading] = useState(false)
@@ -171,7 +171,7 @@ function Users(props) {
                         rowSelection={{
                             type: "checkbox",
                             ...rowSelection,
-                            selectedRowKeys: selectedRows.map(item=>item.key)
+                            selectedRowKeys: selectedRows.map(item=>item.key),
                         }}
                         columns={columns}
                         dataSource={users}
